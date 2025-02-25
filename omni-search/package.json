@@ -3,7 +3,7 @@
   "name": "omni-search",
   "title": "Omni Search",
   "description": "Search for folders and files on your Mac",
-  "icon": "folder-search.png",
+  "icon": "omni-search.png",
   "author": "weijyun0223",
   "keywords": [
     "folders",
