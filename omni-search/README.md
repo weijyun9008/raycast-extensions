@@ -1,6 +1,8 @@
-# Folder Search
+# Omni Search
 
-Search for folders on your Mac
+A powerful file and folder search extension for Mac, inspired by GastroGeek's Folder Search extension.
+
+Search for both files and folders on your Mac with ease.
 
 ## Plugins
 
@@ -18,7 +20,7 @@ The steps are as follows:
 ### e.g. Plugin Path
 
 ```
-/Users/GastroGeek/Documents/FolderSearchPlugins/open-alt.js
+/Users/weijyun9008/Documents/FolderSearchPlugins/open-alt.js
 ```
 
 ### e.g. Plugin file contents (open-alt.js)
