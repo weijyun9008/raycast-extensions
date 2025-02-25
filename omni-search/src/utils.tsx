@@ -7,9 +7,9 @@ import {
   closeMainWindow,
   confirmAlert,
   getPreferenceValues,
-  trash,
-  showToast,
   popToRoot,
+  showToast,
+  trash,
 } from "@raycast/api";
 
 import { runAppleScript } from "run-applescript";
@@ -86,7 +86,7 @@ const safeSearchScope = (searchScope: string | undefined) => {
   return searchScope === "" ? undefined : searchScope;
 };
 
-const folderName = (result: SpotlightSearchResult) => {
+const itemName = (result: SpotlightSearchResult) => {
   return result.path.slice(0).split("/").pop() || "Untitled";
 };
 
@@ -96,7 +96,7 @@ const enclosingFolderName = (result: SpotlightSearchResult) => {
     .join("/");
 };
 
-const showFolderInfoInFinder = (result: SpotlightSearchResult) => {
+const showItemInfoInFinder = (result: SpotlightSearchResult) => {
   popToRoot({ clearSearchBar: true });
   closeMainWindow({ clearRootSearch: true });
 
@@ -116,14 +116,14 @@ const copyFolderToClipboard = (result: SpotlightSearchResult) => {
 const maybeMoveResultToTrash = async (result: SpotlightSearchResult, resultWasTrashed: () => void) => {
   const options: Alert.Options = {
     title: "Move to Trash",
-    message: `Are you sure you want to move "${folderName(result)}" to the Trash?`,
+    message: `Are you sure you want to move "${itemName(result)}" to the Trash?`,
     icon: Icon.Trash,
     primaryAction: {
       title: `Move to Trash`,
       style: Alert.ActionStyle.Destructive,
       onAction: () => {
         trash(result.path);
-        showToast({ title: "Moved to Trash", message: folderName(result) });
+        showToast({ title: "Moved to Trash", message: itemName(result) });
         resultWasTrashed();
       },
     },
@@ -150,13 +150,13 @@ const fixDoubleConcat = (text: string): string => {
 };
 
 export {
-  loadPlugins,
-  safeSearchScope,
-  folderName,
-  enclosingFolderName,
-  showFolderInfoInFinder,
   copyFolderToClipboard,
-  maybeMoveResultToTrash,
-  lastUsedSort,
+  enclosingFolderName,
   fixDoubleConcat,
+  itemName,
+  lastUsedSort,
+  loadPlugins,
+  maybeMoveResultToTrash,
+  safeSearchScope,
+  showItemInfoInFinder,
 };

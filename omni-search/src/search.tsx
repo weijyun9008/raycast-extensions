@@ -32,11 +32,11 @@ import {
   copyFolderToClipboard,
   enclosingFolderName,
   fixDoubleConcat,
-  folderName,
+  itemName,
   lastUsedSort,
   loadPlugins,
   maybeMoveResultToTrash,
-  showFolderInfoInFinder,
+  showItemInfoInFinder,
 } from "./utils";
 
 import fse from "fs-extra";
@@ -141,6 +141,7 @@ export default function Command() {
       searchScope,
       abortable,
       (result: SpotlightSearchResult) => {
+        // TODO: determine if we should sort here or in the SpotlightSearch function
         setResults((results) => [result, ...results].sort(lastUsedSort));
       },
     ],
@@ -250,9 +251,10 @@ export default function Command() {
           <List.Item
             id={`result-${resultIndex.toString()}`}
             key={resultIndex}
-            title={folderName(result)}
+            title={itemName(result)}
             subtitle={!isShowingDetail ? enclosingFolderName(result) : ""}
             icon={{ fileIcon: result.path }}
+            quickLook={{ path: result.path, name: itemName(result) }}
             accessories={resultIsPinned(result) ? [{ icon: { source: Icon.Star, tintColor: Color.Yellow } }] : []}
             detail={
               <List.Item.Detail
@@ -290,7 +292,7 @@ export default function Command() {
               />
             }
             actions={
-              <ActionPanel title={folderName(result)}>
+              <ActionPanel title={itemName(result)}>
                 <Action.Open
                   title="Open"
                   icon={Icon.Folder}
@@ -367,7 +369,7 @@ export default function Command() {
                   title="Show Info in Finder"
                   icon={Icon.Finder}
                   shortcut={{ modifiers: ["cmd"], key: "i" }}
-                  onAction={() => showFolderInfoInFinder(result)}
+                  onAction={() => showItemInfoInFinder(result)}
                 />
                 <Action
                   title="Toggle Details"
@@ -411,7 +413,7 @@ export default function Command() {
                   <Action.CopyToClipboard
                     title="Copy Name"
                     shortcut={{ modifiers: ["cmd", "shift"], key: "." }}
-                    content={folderName(result)}
+                    content={itemName(result)}
                   />
                   <Action.CopyToClipboard
                     title="Copy Path"
@@ -424,7 +426,7 @@ export default function Command() {
                     title="Create Quicklink"
                     icon={Icon.Link}
                     shortcut={{ modifiers: ["cmd", "shift"], key: "l" }}
-                    quicklink={{ link: result.path, name: folderName(result) }}
+                    quicklink={{ link: result.path, name: itemName(result) }}
                   />
                 </ActionPanel.Section>
                 <ActionPanel.Section>
@@ -478,7 +480,7 @@ export default function Command() {
   ) : (
     <List
       isLoading={isQuerying}
-      enableFiltering={false}
+      filtering={false}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={getPlaceholderText(searchScope)}
       isShowingDetail={isShowingDetail}
