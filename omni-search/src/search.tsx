@@ -5,17 +5,17 @@ import {
   ActionPanel,
   closeMainWindow,
   Color,
-  confirmAlert,
+  // confirmAlert,
   environment,
   Form,
-  getSelectedFinderItems,
+  // getSelectedFinderItems,
   Icon,
   Keyboard,
   List,
   LocalStorage,
-  open,
+  // open,
   popToRoot,
-  showHUD,
+  // showHUD,
   showToast,
   Toast,
 } from "@raycast/api";
@@ -29,7 +29,7 @@ import { searchSpotlight } from "./search-spotlight";
 import { OmniSearchPlugin, SpotlightSearchResult } from "./types";
 
 import {
-  copyFolderToClipboard,
+  copyItemToClipboard,
   enclosingFolderName,
   fixDoubleConcat,
   itemName,
@@ -39,8 +39,8 @@ import {
   showItemInfoInFinder,
 } from "./utils";
 
-import fse from "fs-extra";
-import path = require("node:path");
+// import fse from "fs-extra";
+// import path = require("node:path");
 
 // allow string indexing on Icons
 interface IconDictionary {
@@ -293,18 +293,27 @@ export default function Command() {
             }
             actions={
               <ActionPanel title={itemName(result)}>
-                <Action.Open
-                  title="Open"
-                  icon={Icon.Folder}
-                  target={result.path}
-                  onOpen={() => popToRoot({ clearSearchBar: true })}
-                />
-                <Action.ShowInFinder
-                  title="Show in Finder"
-                  path={result.path}
-                  onShow={() => popToRoot({ clearSearchBar: true })}
-                />
-                <Action
+                <ActionPanel.Section>
+                  <Action.Open
+                    title="Open"
+                    // icon={Icon.Folder}
+                    target={result.path}
+                    onOpen={() => popToRoot({ clearSearchBar: true })}
+                  />
+                  <Action.ShowInFinder
+                    title="Show in Finder"
+                    path={result.path}
+                    // shortcut={{ modifiers: ["cmd"], key: "return" }}
+                    onShow={() => popToRoot({ clearSearchBar: true })}
+                  />
+                  <Action.OpenWith
+                    title="Open With"
+                    path={result.path}
+                    shortcut={{ modifiers: ["cmd"], key: "o" }}
+                    onOpen={() => popToRoot({ clearSearchBar: true })}
+                  />
+                  <Action.ToggleQuickLook shortcut={{ modifiers: ["cmd"], key: "y" }} />
+                  {/* <Action
                   title="Send Finder selection to Folder"
                   icon={Icon.Folder}
                   shortcut={{ modifiers: ["cmd", "shift"], key: "s" }}
@@ -358,33 +367,32 @@ export default function Command() {
                     closeMainWindow();
                     popToRoot({ clearSearchBar: true });
                   }}
-                />
-                <Action.OpenWith
-                  title="Open With..."
-                  shortcut={{ modifiers: ["cmd"], key: "o" }}
-                  path={result.path}
-                  onOpen={() => popToRoot({ clearSearchBar: true })}
-                />
-                <Action
-                  title="Show Info in Finder"
-                  icon={Icon.Finder}
-                  shortcut={{ modifiers: ["cmd"], key: "i" }}
-                  onAction={() => showItemInfoInFinder(result)}
-                />
-                <Action
-                  title="Toggle Details"
-                  icon={Icon.Sidebar}
-                  shortcut={{ modifiers: ["cmd", "shift"], key: "d" }}
-                  onAction={() => setIsShowingDetail(!isShowingDetail)}
-                />
-                <Action
-                  title={!resultIsPinned(result) ? "Pin" : "Unpin"}
-                  icon={!resultIsPinned(result) ? Icon.Star : Icon.StarDisabled}
-                  shortcut={{ modifiers: ["cmd", "shift"], key: "p" }}
-                  onAction={() => toggleResultPinnedStatus(result, resultIndex)}
-                />
+                /> */}
+                </ActionPanel.Section>
+                <ActionPanel.Section>
+                  <Action
+                    title="Toggle Details"
+                    icon={Icon.Sidebar}
+                    shortcut={{ modifiers: ["cmd", "shift"], key: "d" }}
+                    onAction={() => setIsShowingDetail(!isShowingDetail)}
+                  />
+                  <Action
+                    title="Show Info in Finder"
+                    icon={Icon.Finder}
+                    shortcut={{ modifiers: ["cmd"], key: "i" }}
+                    onAction={() => showItemInfoInFinder(result)}
+                  />
+                </ActionPanel.Section>
+                <ActionPanel.Section>
+                  <Action
+                    title={!resultIsPinned(result) ? "Pin" : "Unpin"}
+                    icon={!resultIsPinned(result) ? Icon.Star : Icon.StarDisabled}
+                    shortcut={{ modifiers: ["cmd", "shift"], key: "p" }}
+                    onAction={() => toggleResultPinnedStatus(result, resultIndex)}
+                  />
+                </ActionPanel.Section>
                 {props.title === "Pinned" && (
-                  <>
+                  <ActionPanel.Section>
                     {resultIndex > 0 && (
                       <Action
                         title="Move Pin Up"
@@ -401,14 +409,14 @@ export default function Command() {
                         onAction={() => movePinDown(result, resultIndex)}
                       />
                     )}
-                  </>
+                  </ActionPanel.Section>
                 )}
                 <ActionPanel.Section>
                   <Action.CopyToClipboard
-                    title="Copy Folder"
+                    title="Copy Item"
                     shortcut={{ modifiers: ["cmd"], key: "." }}
-                    content={``}
-                    onCopy={() => copyFolderToClipboard(result)}
+                    content={{ file: result.path }}
+                    onCopy={() => copyItemToClipboard(result)}
                   />
                   <Action.CopyToClipboard
                     title="Copy Name"

@@ -109,7 +109,7 @@ const showItemInfoInFinder = (result: SpotlightSearchResult) => {
   `);
 };
 
-const copyFolderToClipboard = (result: SpotlightSearchResult) => {
+const copyItemToClipboard = (result: SpotlightSearchResult) => {
   runAppleScript(`set the clipboard to POSIX file "${result.path}"`);
 };
 
@@ -150,7 +150,7 @@ const fixDoubleConcat = (text: string): string => {
 };
 
 export {
-  copyFolderToClipboard,
+  copyItemToClipboard,
   enclosingFolderName,
   fixDoubleConcat,
   itemName,
